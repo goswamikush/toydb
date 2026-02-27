@@ -3,12 +3,12 @@
 #include <string.h>
 #include "utils/row.h"
 
-int write_row(FILE *fptr, Row *row);
+void write_row(FILE *fptr, Row *row);
 
 int main() {
     FILE *fptr;
 
-    fptr = fopen("data.txt", "w");
+    fptr = fopen("data.bin", "wb");
 
     if (fptr == NULL) {
         printf("Error opening file!\n");
@@ -17,15 +17,17 @@ int main() {
 
     printf("Creating new row\n");
 
-    Row *new_data = malloc(sizeof(Row));
+    Row entry;
 
-    new_data->id = 1;
-    strcpy(new_data->name, "1234567");
-    new_data->age = 0;
+    entry.id = 1;
+    strcpy(entry.name, "1234567");
+    entry.age = 0;
 
     printf("Writing new row\n");
 
-    write_row(fptr, new_data);
+    write_row(fptr, &entry);
+    write_row(fptr, &entry);
+    write_row(fptr, &entry);
 
     fclose(fptr);
 
@@ -34,10 +36,7 @@ int main() {
     return 0;
 }
 
-int write_row(FILE *fptr, Row *row) {
-    fprintf(fptr, "%d", row->id);
-    fprintf(fptr, "%s", row->name);
-    fprintf(fptr, "%d", row->age);
-
-    return 0;
+void write_row(FILE *fptr, Row *row) {
+    fseek(fptr, 0L, SEEK_END);
+    fwrite(row, sizeof(Row), 1, fptr);
 }
