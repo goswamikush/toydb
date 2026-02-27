@@ -27,7 +27,9 @@ int main() {
     printf("Writing new row\n");
 
     write_row(fptr, &entry);
+    entry.id = 2;
     write_row(fptr, &entry);
+    entry.id = 3;
     write_row(fptr, &entry);
 
     fclose(fptr);
@@ -46,11 +48,12 @@ void write_row(FILE *fptr, Row *row) {
 void read_file() {
     FILE *fptr = fopen("data.bin", "rb");
    
-    Row new_row;
+    Row new_row; 
 
-    fread(&new_row, sizeof(Row), 1, fptr);
+    while (fread(&new_row, sizeof(Row), 1, fptr) == 1) {
 
-    printf("Row id: %d\n", new_row.id);
-    printf("Row name: %s\n", new_row.name);
-    printf("Row age: %d\n", new_row.age);
+        printf("Row id: %d\n", new_row.id);
+        printf("Row name: %s\n", new_row.name);
+        printf("Row age: %d\n", new_row.age);
+    }
 }
