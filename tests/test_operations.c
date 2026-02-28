@@ -100,7 +100,6 @@ bool assert_row_equals(int target_id, Row *ground_truth) {
 }
 
 Row get_row(int pointer) {
-    printf("Pointer: %d\n", pointer);
     Row res;
 
     FILE *fptr = fopen("data.bin", "r+b");

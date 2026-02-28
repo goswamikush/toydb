@@ -18,15 +18,15 @@ void write_row(Row *row, bool is_update) {
     fwrite(row, sizeof(Row), 1, fptr);
 
     // Update num rows
-    // if (!is_update) {
-    //     int row_count;
-    //     fseek(fptr, 0, SEEK_SET);
-    //     fread(&row_count, sizeof(int), 1, fptr);
-    //     row_count++;
+    if (!is_update) {
+        int row_count;
+        fseek(fptr, 0, SEEK_SET);
+        fread(&row_count, sizeof(int), 1, fptr);
+        row_count++;
 
-    //     fseek(fptr, 0, SEEK_SET);
-    //     fwrite(&row_count, sizeof(int), 1, fptr);
-    // }
+        fseek(fptr, 0, SEEK_SET);
+        fwrite(&row_count, sizeof(int), 1, fptr);
+    }
 
     fclose(fptr);
 }
