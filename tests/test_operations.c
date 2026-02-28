@@ -11,6 +11,7 @@ void setup(Row *rows);
 
 Row get_row(int pointer);
 bool assert_row_equals(int id, Row *ground_truth);
+void assert_row_num_equals(int expected_value);
 
 void test_insert() {
     printf("=== Beginning row insertion tests ===\n\n");
@@ -21,6 +22,8 @@ void test_insert() {
     assert_row_equals(rows[0].id, &rows[0]);
     assert_row_equals(rows[1].id, &rows[1]);
     assert_row_equals(rows[2].id, &rows[2]);
+
+    assert_row_num_equals(3);
 
     printf("\n=== End of row insertion tests ===\n\n");
 }
@@ -42,6 +45,8 @@ void test_update() {
 
     assert_row_equals(10, &new_entry);
 
+    assert_row_num_equals(3);
+
     printf("\n=== Ending row update tests\n\n");
 }
 
@@ -58,6 +63,8 @@ void test_delete() {
     } else {
         printf("Failed to delete row\n");
     }
+
+    assert_row_num_equals(3);
 
     printf("\n=== Ending row delete tests\n\n");
 }
@@ -124,6 +131,20 @@ void setup(Row *rows) {
     write_row(&rows[0], false);
     write_row(&rows[1], false);
     write_row(&rows[2], false);
+}
+
+void assert_row_num_equals(int expected_value) {
+    FILE *fptr = fopen("data.bin", "r");
+
+    int num_rows;
+
+    fread(&num_rows, sizeof(int), 1, fptr);
+
+    if (num_rows != expected_value) {
+        printf("Expected num rows of %d but got %d\n", expected_value, num_rows);
+    }
+
+    printf("Correct number of rows!\n");
 }
 
 int main() {
