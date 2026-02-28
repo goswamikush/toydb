@@ -4,6 +4,8 @@
 #include "utils/row.h"
 
 void write_row(FILE *fptr, Row *row);
+void find_row(int id);
+void print_row(Row *row);
 void read_file();
 
 int main() {
@@ -36,6 +38,9 @@ int main() {
 
     read_file();
 
+    printf("Finding row with id 1\n");
+    find_row(1);
+
     printf("Success writing to file!\n");
 
     return 0;
@@ -56,4 +61,22 @@ void read_file() {
         printf("Row name: %s\n", new_row.name);
         printf("Row age: %d\n", new_row.age);
     }
+}
+
+void find_row(int id) {
+    FILE *fptr = fopen("data.bin", "rb");
+
+    Row curr_row;
+
+    while (fread(&curr_row, sizeof(Row), 1, fptr) == 1) {
+        if (curr_row.id == id) {
+            print_row(&curr_row);
+        }
+    }
+}
+
+void print_row(Row *row) {
+    printf("Row id: %d\n", row->id);
+    printf("Row name: %s\n", row->name);
+    printf("Row age: %d\n", row->age);
 }
