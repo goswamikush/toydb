@@ -2,13 +2,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include "utils/row.h"
+#include "utils/operations.h"
 
-void write_row(FILE *fptr, Row *row);
-int find_row(int id);
-void print_row(Row *row);
 void read_file();
-void update_row(int id, Row *new_row);
-void delete_row(int id);
 
 int main() {
     FILE *fptr;
@@ -61,10 +57,6 @@ int main() {
     return 0;
 }
 
-void write_row(FILE *fptr, Row *row) {
-    fwrite(row, sizeof(Row), 1, fptr);
-}
-
 void read_file() {
     FILE *fptr = fopen("data.bin", "rb");
    
@@ -80,48 +72,4 @@ void read_file() {
         printf("Row age: %d\n", new_row.age);
         printf("\n");
     }
-}
-
-int find_row(int id) {
-    FILE *fptr = fopen("data.bin", "rb");
-
-    Row curr_row;
-
-    int pointer = 0;
-
-    while (fread(&curr_row, sizeof(Row), 1, fptr) == 1) {
-        if (curr_row.id == id) {
-            fclose(fptr);
-            return pointer;
-        }
-
-        pointer++;
-    }
-
-    return -1;
-}
-
-void update_row(int id, Row *new_row) {
-    int pointer = find_row(id);
-
-    printf("Pointer is at: %d\n", pointer);
-
-    FILE *fptr = fopen("data.bin", "r+b");
-    fseek(fptr, sizeof(Row) * pointer, SEEK_SET);
-    write_row(fptr, new_row);
-    fclose(fptr);
-}
-
-void delete_row(int id) {
-    Row new_row;
-
-    new_row.id = -1;
-
-    update_row(id, &new_row);
-}
-
-void print_row(Row *row) {
-    printf("Row id: %d\n", row->id);
-    printf("Row name: %s\n", row->name);
-    printf("Row age: %d\n", row->age);
 }
