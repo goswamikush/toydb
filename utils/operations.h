@@ -3,8 +3,9 @@
 
 #include "row.h"
 #include <stdio.h>
+#include <stdbool.h>
 
-void write_row(FILE *fptr, Row *row);
+void write_row(Row *row, bool is_update);
 void update_row(int id, Row *new_row);
 void delete_row(int id);
 

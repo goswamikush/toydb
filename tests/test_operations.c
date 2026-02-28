@@ -100,10 +100,11 @@ bool assert_row_equals(int target_id, Row *ground_truth) {
 }
 
 Row get_row(int pointer) {
+    printf("Pointer: %d\n", pointer);
     Row res;
 
     FILE *fptr = fopen("data.bin", "r+b");
-    fseek(fptr, sizeof(Row) * pointer, SEEK_SET);\
+    fseek(fptr, sizeof(Row) * pointer + sizeof(int), SEEK_SET);
     
     fread(&res, sizeof(Row), 1, fptr);
 
@@ -113,14 +114,17 @@ Row get_row(int pointer) {
 void setup(Row *rows) {
     FILE *fptr = fopen("data.bin", "wb");
 
+    int num_rows = 0;
+    fwrite(&num_rows, sizeof(int), 1, fptr);
+    fclose(fptr);
+
     rows[0] = (Row){1, "Alice", 25};
     rows[1] = (Row){2, "Bob", 30};
     rows[2] = (Row){3, "Charlie", 35};
 
-    write_row(fptr, &rows[0]);
-    write_row(fptr, &rows[1]);
-    write_row(fptr, &rows[2]);
-    fclose(fptr);
+    write_row(&rows[0], false);
+    write_row(&rows[1], false);
+    write_row(&rows[2], false);
 }
 
 int main() {
