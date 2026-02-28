@@ -6,7 +6,8 @@
 void test_insert();
 void test_update();
 void test_delete();
-// void test_find();
+void test_find();
+void setup(Row *rows);
 
 Row get_row(int pointer);
 bool assert_row_equals(int id, Row *ground_truth);
@@ -14,20 +15,12 @@ bool assert_row_equals(int id, Row *ground_truth);
 void test_insert() {
     printf("=== Beginning row insertion tests ===\n\n");
 
-    FILE *fptr = fopen("data.bin", "wb");
+    Row rows[3];
+    setup(rows);
 
-    Row r1 = {1, "Alice", 25};
-    Row r2 = {2, "Bob", 30};
-    Row r3 = {3, "Charlie", 35};
-
-    write_row(fptr, &r1);
-    write_row(fptr, &r2);
-    write_row(fptr, &r3);
-    fclose(fptr);
-
-    assert_row_equals(r1.id, &r1);
-    assert_row_equals(r2.id, &r2);
-    assert_row_equals(r3.id, &r3);
+    assert_row_equals(rows[0].id, &rows[0]);
+    assert_row_equals(rows[1].id, &rows[1]);
+    assert_row_equals(rows[2].id, &rows[2]);
 
     printf("\n=== End of row insertion tests ===\n\n");
 }
@@ -35,16 +28,8 @@ void test_insert() {
 void test_update() {
     printf("\n=== Beginning row update tests ===\n\n");
 
-    FILE *fptr = fopen("data.bin", "wb");
-
-    Row r1 = {1, "Alice", 25};
-    Row r2 = {2, "Bob", 30};
-    Row r3 = {3, "Charlie", 35};
-
-    write_row(fptr, &r1);
-    write_row(fptr, &r2);
-    write_row(fptr, &r3);
-    fclose(fptr);
+    Row rows[3];
+    setup(rows);
 
     // Create new row
     Row new_entry;
@@ -63,20 +48,12 @@ void test_update() {
 void test_delete() {
     printf("\n=== Beginning row delete tests ===\n\n");
 
-    FILE *fptr = fopen("data.bin", "wb");
+    Row rows[3];
+    setup(rows);
 
-    Row r1 = {1, "Alice", 25};
-    Row r2 = {2, "Bob", 30};
-    Row r3 = {3, "Charlie", 35};
+    delete_row(rows[0].id);
 
-    write_row(fptr, &r1);
-    write_row(fptr, &r2);
-    write_row(fptr, &r3);
-    fclose(fptr);
-
-    delete_row(r1.id);
-
-    if (find_row_pos(r1.id) == -1) {
+    if (find_row_pos(rows[0].id) == -1) {
         printf("Successfully deleted row\n");
     } else {
         printf("Failed to delete row\n");
@@ -88,25 +65,12 @@ void test_delete() {
 void test_find() {
     printf("\n=== Beginning row find tests ===\n\n");
 
-    FILE *fptr = fopen("data.bin", "wb");
+    Row rows[3];
+    setup(rows);
 
-    Row r1 = {1, "Alice", 25};
-    Row r2 = {2, "Bob", 30};
-    Row r3 = {3, "Charlie", 35};
-
-    write_row(fptr, &r1);
-    write_row(fptr, &r2);
-    write_row(fptr, &r3);
-    fclose(fptr);
-
-    // Testing
-    int r1_pos = find_row_pos(r1.id);
-    int r2_pos = find_row_pos(r2.id);
-    int r3_pos = find_row_pos(r3.id);
-
-    assert_row_equals(r1.id, &r1);
-    assert_row_equals(r2.id, &r2);
-    assert_row_equals(r3.id, &r3);
+    assert_row_equals(rows[0].id, &rows[0]);
+    assert_row_equals(rows[1].id, &rows[1]);
+    assert_row_equals(rows[2].id, &rows[2]);
 
     printf("\n=== Ending row find tests\n\n");
 }
@@ -144,6 +108,19 @@ Row get_row(int pointer) {
     fread(&res, sizeof(Row), 1, fptr);
 
     return res;
+}
+
+void setup(Row *rows) {
+    FILE *fptr = fopen("data.bin", "wb");
+
+    rows[0] = (Row){1, "Alice", 25};
+    rows[1] = (Row){2, "Bob", 30};
+    rows[2] = (Row){3, "Charlie", 35};
+
+    write_row(fptr, &rows[0]);
+    write_row(fptr, &rows[1]);
+    write_row(fptr, &rows[2]);
+    fclose(fptr);
 }
 
 int main() {
