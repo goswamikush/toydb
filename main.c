@@ -75,18 +75,20 @@ void read_file() {
 int find_row(int id) {
     FILE *fptr = fopen("data.bin", "rb");
 
-    Row *curr_row = malloc(sizeof(Row));
+    Row curr_row;
 
     int pointer = 0;
 
-    while (fread(curr_row, sizeof(Row), 1, fptr) == 1) {
-        if (curr_row->id == id) {
+    while (fread(&curr_row, sizeof(Row), 1, fptr) == 1) {
+        if (curr_row.id == id) {
             fclose(fptr);
             return pointer;
         }
 
         pointer++;
     }
+
+    return -1;
 }
 
 void update_row(int id, Row *new_row) {
