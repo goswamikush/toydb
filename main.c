@@ -8,6 +8,7 @@ int find_row(int id);
 void print_row(Row *row);
 void read_file();
 void update_row(int id, Row *new_row);
+void delete_row(int id);
 
 int main() {
     FILE *fptr;
@@ -49,6 +50,12 @@ int main() {
     update_row(1, &new_entry);
 
     read_file();
+
+    delete_row(10);
+
+    printf("=== File after deleting first row ===\n\n");
+    read_file();
+
     printf("Success writing to file!\n");
 
     return 0;
@@ -64,6 +71,9 @@ void read_file() {
     Row new_row; 
 
     while (fread(&new_row, sizeof(Row), 1, fptr) == 1) {
+        if (new_row.id == -1) {
+            continue;
+        }
 
         printf("Row id: %d\n", new_row.id);
         printf("Row name: %s\n", new_row.name);
@@ -100,6 +110,14 @@ void update_row(int id, Row *new_row) {
     fseek(fptr, sizeof(Row) * pointer, SEEK_SET);
     write_row(fptr, new_row);
     fclose(fptr);
+}
+
+void delete_row(int id) {
+    Row new_row;
+
+    new_row.id = -1;
+
+    update_row(id, &new_row);
 }
 
 void print_row(Row *row) {
